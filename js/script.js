@@ -56,6 +56,14 @@ let model = {
     }
 };
 
+let controller = {
+    guesses: 0,
+    
+    processGuess: function (guess) {
+        
+    }
+}
+
 model.fire("53");
 model.fire("24");
 model.fire("34");
