@@ -56,13 +56,38 @@ let model = {
     }
 };
 
+function parseGuesses(guess) {
+    let alphabet = ["A", "B", "C", "D", "E", "F", "G"],
+        firstChar = "",
+        row,
+        column;
+
+    if (guess === null || guess.length !== 2) {
+        view.displayMessage("Enter a letter and a number on the board.");
+    } else {
+        firstChar = guess.charAt(0);
+        row = alphabet.indexOf(firstChar);
+        column = guess.charAt(1);
+
+        if (isNaN(row) || isNaN(column)) {
+            view.displayMessage("Ooops, that isn't on the board.");
+        } else if (row < 0 || row >= model.boardSize ||
+                    column < 0 || column >= model.boardSize) {
+            view.displayMessage("Ooops, that's off the board.");
+        } else {
+            return row + column;
+        }
+    }
+    return null;
+}
+
 let controller = {
     guesses: 0,
     
     processGuess: function (guess) {
         
     }
-}
+};
 
 model.fire("53");
 model.fire("24");
