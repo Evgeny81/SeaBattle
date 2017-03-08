@@ -56,7 +56,7 @@ let model = {
     }
 };
 
-function parseGuesses(guess) {
+function parseGuess(guess) {
     let alphabet = ["A", "B", "C", "D", "E", "F", "G"],
         firstChar = "",
         row,
@@ -64,6 +64,7 @@ function parseGuesses(guess) {
 
     if (guess === null || guess.length !== 2) {
         view.displayMessage("Enter a letter and a number on the board.");
+        console.log("null");
     } else {
         firstChar = guess.charAt(0);
         row = alphabet.indexOf(firstChar);
@@ -75,6 +76,8 @@ function parseGuesses(guess) {
                     column < 0 || column >= model.boardSize) {
             view.displayMessage("Ooops, that's off the board.");
         } else {
+            console.log("ok");
+
             return row + column;
         }
     }
@@ -85,7 +88,14 @@ let controller = {
     guesses: 0,
     
     processGuess: function (guess) {
-        
+        let location = parseGuess(guess);
+        if (location) {
+            this.guesses++;
+            let hit = model.fire(location);
+            if (hit && model.shipsSunk === model.numShips) {
+                view.displayMessage("You sank all my battleships, in " + this.guesses + " guesses");
+            }
+        }
     }
 };
 
