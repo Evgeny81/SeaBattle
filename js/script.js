@@ -33,7 +33,39 @@ let model = {
         {locations: ["24", "34", "44"], hits: ["", "", ""]},
         {locations: ["10", "11", "12"], hits: ["", "", ""]}
     ],
-    
+    generateShipLocations: function () {
+        let locations;
+        for (let i = 0; i < this.numShips; i++) {
+            do {
+                locations = this.generateShip();
+            } while (this.collision(locations));
+            this.ships[i].locations = locations;
+        }
+    },
+    generateShip: function () {
+        let direction = Math.floor(Math.random() * 2);
+        let row, col;
+
+        if (direction === 1) {
+
+        } else {
+
+        }
+        
+        let newShipLocations = [];
+        for (let i = 0; i < this.shipLength; i++) {
+            if (direction === 1) {
+
+            } else {
+
+            }
+        }
+
+        return newShipLocations;
+    },
+    collision: function () {
+
+    },
     fire: function (guess) {
         
         for (let i = 0; i < this.numShips; i++) {
