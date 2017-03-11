@@ -11,11 +11,11 @@ body {
 }
 
 .hit {
-    background: url("../images/ship.png") no-repeat;
+    background: url("../images/ship.png") no-repeat center center;
 }
 
 .miss {
-    background: url("../images/miss.png") no-repeat;
+    background: url("../images/miss.png") no-repeat center center;
 }
 
 #messageArea {

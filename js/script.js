@@ -1,5 +1,12 @@
 "use strict";
 
+function init() {
+    let fireButton = document.getElementById("fireButton");
+    let guessInput = document.getElementById("guessInput");
+    fireButton.onclick = handleFireButton;
+    guessInput.onkeypress = handleKeyPress;
+}
+
 let view = {
     displayMessage: function (msg) {
         let messageArea = document.getElementById("messageArea");
@@ -26,12 +33,13 @@ let model = {
         {locations: ["24", "34", "44"], hits: ["", "", ""]},
         {locations: ["10", "11", "12"], hits: ["", "", ""]}
     ],
+    
     fire: function (guess) {
         
         for (let i = 0; i < this.numShips; i++) {
             let ship = this.ships[i];
             let index = ship.locations.indexOf(guess);
-            if (index >=0) {
+            if (index >=0 && ship.hits[index]!="hit") {
                 ship.hits[index] = "hit";
                 view.displayHit(guess);
                 view.displayMessage("HIT");
@@ -39,6 +47,9 @@ let model = {
                     view.displayMessage("You sank my battleship!");
                     this.shipsSunk++;
                 }
+                return true;
+            } else if (index >=0 && ship.hits[index]=="hit") {
+                view.displayMessage("You have already hit that area.");
                 return true;
             }
         }
@@ -53,6 +64,21 @@ let model = {
             }
         }
         return true;
+    }
+};
+
+let controller = {
+    guesses: 0,
+    
+    processGuess: function (guess) {
+        let location = parseGuess(guess);
+        if (location) {
+            this.guesses++;
+            let hit = model.fire(location);
+            if (hit && model.shipsSunk === model.numShips) {
+                view.displayMessage("You sank all my battleships, in " + this.guesses + " guesses");
+            }
+        }
     }
 };
 
@@ -73,7 +99,7 @@ function parseGuess(guess) {
         if (isNaN(row) || isNaN(column)) {
             view.displayMessage("Ooops, that isn't on the board.");
         } else if (row < 0 || row >= model.boardSize ||
-                    column < 0 || column >= model.boardSize) {
+            column < 0 || column >= model.boardSize) {
             view.displayMessage("Ooops, that's off the board.");
         } else {
             console.log("ok");
@@ -84,24 +110,18 @@ function parseGuess(guess) {
     return null;
 }
 
-let controller = {
-    guesses: 0,
-    
-    processGuess: function (guess) {
-        let location = parseGuess(guess);
-        if (location) {
-            this.guesses++;
-            let hit = model.fire(location);
-            if (hit && model.shipsSunk === model.numShips) {
-                view.displayMessage("You sank all my battleships, in " + this.guesses + " guesses");
-            }
-        }
+function handleFireButton() {
+    let guess = guessInput.value.toUpperCase();
+    controller.processGuess(guess);
+
+    guessInput.value = "";
+}
+
+function handleKeyPress(e) {
+    if (e.keyCode === 13) {
+        fireButton.click();
+        return false;
     }
-};
+}
 
-model.fire("53");
-model.fire("24");
-model.fire("34");
-model.fire("44");
-
-
+window.onload = init;
